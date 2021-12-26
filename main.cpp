@@ -24,7 +24,6 @@ void setup() {
   pinMode(eleInput, INPUT);
   pinMode(eleOutput, OUTPUT);
   
-  
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
@@ -32,7 +31,6 @@ void setup() {
   digitalWrite(redPin, LOW);
   digitalWrite(greenPin, LOW);
   digitalWrite(bluePin, LOW);
-
 
   lcd.begin(16.2);
 }
