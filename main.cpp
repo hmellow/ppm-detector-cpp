@@ -6,7 +6,7 @@ const float greenThres = 10;
 const float redThres = 0;
 // ---------------------
 
-const int eleInput = 0;
+const int eleInput = 13;
 const int eleOutput = 6;
 
 const int redPin = 7;
