@@ -59,9 +59,9 @@ if (buttonState == HIGH) {
   // LCD results
   float roundedVoltage = round(volts * 10000) / 10000;
   float roundedTDS = round(TDS * 10000) / 10000;
-  lcd.print("vts: " + roundedVoltage);
+  lcd.print("vts: " + String(roundedVoltage));
   lcd.setCursor(0, 2);
-  lcd.print("ppm: " + roundedTDS);
+  lcd.print("ppm: " + String(roundedTDS));
 
   // LED concentration indication
   if (TDS >= blueThres) {
