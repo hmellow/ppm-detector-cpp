@@ -44,21 +44,21 @@ if (buttonState == HIGH) {
   // Initial analog reading
   digitalWrite(eleOutput, HIGH);
   delay(10);
-  analog = analogRead(eleInput);
+  float analog = analogRead(eleInput);
   digitalWrite(eleOutput, LOW);
 
   // Volts
-  volts = analog * (5/1024);
+  float volts = analog * (5/1024);
   // Resistance (Ohms)
-  resistance = (50000/volts) - 10000;
+  float resistance = (50000/volts) - 10000;
   // Conductivity (microSiemens)
-  siemens = 1 / (resistance/1000000);
+  float siemens = 1 / (resistance/1000000);
   // TDS (ppm)
-  TDS = 500 * (siemens/1000);
+  float TDS = 500 * (siemens/1000);
 
   // LCD results
-  roundedVoltage = round(volts * 10000) / 10000;
-  roundedTDS = round(TDS * 10000) / 10000;
+  float roundedVoltage = round(volts * 10000) / 10000;
+  float roundedTDS = round(TDS * 10000) / 10000;
   lcd.print("vts: " + roundedVoltage);
   lcd.setCursor(0, 2);
   lcd.print("ppm: " + roundedTDS);
