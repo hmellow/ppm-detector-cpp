@@ -32,7 +32,7 @@ void setup() {
   digitalWrite(greenPin, LOW);
   digitalWrite(bluePin, LOW);
 
-  lcd.begin(16.2);
+  lcd.begin(16,2);
 }
 
 void loop() {
