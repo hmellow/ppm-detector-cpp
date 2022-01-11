@@ -48,7 +48,7 @@ if (buttonState == HIGH) {
   digitalWrite(eleOutput, LOW);
 
   // Volts
-  float volts = analog * (5/1024);
+  float volts = (analog * 5) / 1024;
   // Resistance (Ohms)
   float resistance = (50000/volts) - 10000;
   // Conductivity (microSiemens)
