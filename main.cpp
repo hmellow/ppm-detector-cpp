@@ -36,9 +36,6 @@ void setup() {
 }
 
 void loop() {
-buttonState = digitalRead(buttonPin);
-
-if (buttonState == HIGH) {
   reset();
   
   // Initial analog reading
@@ -71,7 +68,7 @@ if (buttonState == HIGH) {
    } else {
      digitalWrite(redPin, HIGH); 
    }
-  delay(500);
+  delay(2000);
   }
 }
 
