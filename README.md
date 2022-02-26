@@ -1,1 +1,1 @@
-# Parts Per Million (mg/L) Arduino Detector
+# Parts Per Million (mg/L) Raspberry Pi Pico Detector
