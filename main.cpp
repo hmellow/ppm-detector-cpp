@@ -1,75 +1,124 @@
 #include <LiquidCrystal.h>
 
-// ---------------------
-const float blueThres = 30;
-const float greenThres = 10;
-const float redThres = 0;
-// ---------------------
+// ===== Main Variables =====
+// -- LEDs --
+int blueRangeLow = 1;
+int blueRangeHigh = 10000;
+int redRangeLow = 2;
+int redRangeHigh = 10000;
+int greenRangeLow = 3;
+int greenRangeHigh = 10000;
 
-const int eleInput = 13;
-const int eleOutput = 6;
+// -- Wait --
+int wait = 500;
 
-const int redPin = 7;
-const int greenPin = 8;
-const int bluePin = 9;
+// ===== Pin Setup =====
+const int rs = 16, en = 17, d4 = 18, d5 = 19, d6 = 20, d7 = 21;
+int inputPin = A2;
+int greenLED = 12;
+int redLED = 11;
+int blueLED = 10;
 
-const int buttonPin = 10;
-int buttonState = 0;
+// ===== Other Variable Setup =====
+const float ArduinoVoltage = 3.3; // CHANGE THIS FOR 3.3v Arduinos
+const float ArduinoResolution = ArduinoVoltage / 1024;
+const float resistorValue = 10000.0;
 
-const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+// ===== Pre Setup =====
+ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-
-void setup() {
-  pinMode(eleInput, INPUT);
-  pinMode(eleOutput, OUTPUT);
-  
-  pinMode(redPin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
-  pinMode(bluePin, OUTPUT);
-
-  digitalWrite(redPin, LOW);
-  digitalWrite(greenPin, LOW);
-  digitalWrite(bluePin, LOW);
-
-  lcd.begin(16,2);
+// ===== Setup =====
+void setup()
+{
+ Serial.begin(9600);
+ pinMode(inputPin, INPUT);
+ lcd.begin(16,2);
 }
 
-void loop() {
-  reset();
-  
-  // Initial analog reading
-  digitalWrite(eleOutput, HIGH);
-  delay(10);
-  float analog = analogRead(eleInput);
-  digitalWrite(eleOutput, LOW);
+// ===== Loop =====
 
-  // Volts
-  float volts = (analog * 5) / 1024;
-  // Resistance (Ohms)
-  float resistance = (50000/volts) - 10000;
-  // Conductivity (microSiemens)
-  float siemens = 1 / (resistance/1000000);
-  // TDS (ppm)
-  float TDS = 500 * (siemens/1000);
+void loop()
+{
+ int analogValue=0;
+ float returnVoltage=0.0;
+ float resistance=0.0;
+ double Siemens;
+ float TDS=0.0;
+ float funcationatedTDS=0;
 
-  // LCD results
-  float roundedVoltage = round(volts * 10000) / 10000;
-  float roundedTDS = round(TDS * 10000) / 10000;
-  lcd.print("vts: " + String(roundedVoltage));
-  lcd.setCursor(0, 2);
-  lcd.print("ppm: " + String(roundedTDS));
+ digitalWrite( 4, HIGH);
 
-  // LED concentration indication
-  if (TDS >= blueThres) {
-    digitalWrite(bluePin, HIGH);
-   } else if (TDS > = greenThres) {
-     digitalWrite(greenPin, HIGH);
-   } else {
-     digitalWrite(redPin, HIGH); 
-   }
-  delay(2000);
-  }
+ 
+ if (digitalRead( 5 ) != HIGH)
+ {
+   return;
+ }
+
+ // -- LCD --
+ lcd.setCursor(0,0);
+// lcd.clear();
+
+ // -- Analog --
+ analogValue = analogRead( inputPin );
+// Serial.println(analogValue);
+
+ // -- Voltage --
+ returnVoltage = analogValue * ArduinoResolution;
+// Serial.println(returnVoltage);
+
+ funcationatedTDS = 10.1 * (pow(returnVoltage, 16.1));
+ TDS = funcationatedTDS;
+// Serial.println(funcationatedTDS);
+
+/*
+ // -- Resistance --
+ resistance = ((5.00 * resistorValue) / returnVoltage) - resistorValue;
+// Serial.println(resistance);
+
+ // -- Siemens --
+ Siemens = 1.0/(resistance/1000000);
+// Serial.println(Siemens);
+
+  // -- TDS --
+ TDS = 500 * (Siemens/1000);
+// Serial.print(TDS);
+*/
+
+ delay(wait);
+
+
+ // -- LED Code --
+ // Blue
+ if (blueRangeLow < TDS && TDS < blueRangeHigh) 
+ {
+  digitalWrite( blueLED, HIGH);
+ } else
+ {
+  digitalWrite( blueLED, LOW);
+ }
+
+ // Red
+ if (redRangeLow < TDS && TDS < redRangeHigh) 
+ {
+  digitalWrite( redLED, HIGH);
+ } else
+ {
+  digitalWrite( redLED, LOW);
+ }
+
+ // Green
+ if (greenRangeLow < TDS && TDS < greenRangeHigh) 
+ {
+  digitalWrite( greenLED, HIGH);
+ } else
+ {
+  digitalWrite( greenLED, LOW);
+ }
+
+  // -- LCD Update --
+ lcd.print(returnVoltage);
+ lcd.setCursor(0, 1);
+ lcd.print(funcationatedTDS);
 }
 
 void reset() {
