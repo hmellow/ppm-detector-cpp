@@ -23,6 +23,7 @@ int blueLED = 10;
 const float ArduinoVoltage = 3.3; // CHANGE THIS FOR 3.3v Arduinos
 const float ArduinoResolution = ArduinoVoltage / 1024;
 const float resistorValue = 10000.0;
+bool state=false;
 
 // ===== Pre Setup =====
  LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -32,6 +33,8 @@ void setup()
 {
  Serial.begin(9600);
  pinMode(inputPin, INPUT);
+ pinMode(4, OUTPUT);
+ pinMode(5, INPUT);
  lcd.begin(16,2);
 }
 
@@ -44,14 +47,21 @@ void loop()
  float resistance=0.0;
  double Siemens;
  float TDS=0.0;
- float funcationatedTDS=0;
 
- digitalWrite( 4, HIGH);
+ digitalWrite(4, HIGH);
 
- 
+// Freeze
  if (digitalRead( 5 ) != HIGH)
  {
+   state = true;
    return;
+ }
+ 
+// Clear on unFreeze
+ if (state == true)
+ {
+  lcd.clear();
+  state = false;
  }
 
  // -- LCD --
@@ -66,11 +76,11 @@ void loop()
  returnVoltage = analogValue * ArduinoResolution;
 // Serial.println(returnVoltage);
 
- funcationatedTDS = 10.1 * (pow(returnVoltage, 16.1));
- TDS = funcationatedTDS;
-// Serial.println(funcationatedTDS);
+// -- TDS --
+ TDS = 10.1 * (pow(returnVoltage, 16.1));
+// Serial.println(TDS);
 
-/*
+/* OLD CODE
  // -- Resistance --
  resistance = ((5.00 * resistorValue) / returnVoltage) - resistorValue;
 // Serial.println(resistance);
@@ -118,5 +128,5 @@ void loop()
   // -- LCD Update --
  lcd.print(returnVoltage);
  lcd.setCursor(0, 1);
- lcd.print(funcationatedTDS);
+ lcd.print(TDS);
 }
