@@ -120,11 +120,3 @@ void loop()
  lcd.setCursor(0, 1);
  lcd.print(funcationatedTDS);
 }
-
-void reset() {
-  lcd.clear();
-  
-  digitalWrite(redPin, LOW);
-  digitalWrite(greenPin, LOW);
-  digitalWrite(bluePin, LOW);
- }
