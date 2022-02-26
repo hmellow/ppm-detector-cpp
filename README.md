@@ -1,1 +1,1 @@
-# ppm-detector-cpp
+# Parts Per Million (mg / L) Arduino Detector
